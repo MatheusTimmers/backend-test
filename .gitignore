@@ -1,0 +1,41 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, output of `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go workspace file (go.work)
+go.work
+go.work.sum
+
+# Vendor directory (if you're using Go modules, you might or might not want this)
+vendor/
+
+# Dependency directories (remove if you're committing vendored dependencies)
+bin/
+build/
+dist/
+
+# Logs
+*.log
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+*.DS_Store
+
+# OS-specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
