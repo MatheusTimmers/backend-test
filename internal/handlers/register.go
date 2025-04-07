@@ -1,9 +1,10 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+
 	"github.com/MatheusTimmers/backend-test/internal/db"
 	"github.com/MatheusTimmers/backend-test/pkg/models"
+	"github.com/gofiber/fiber/v2"
 )
 
 func Register(c *fiber.Ctx) error {
@@ -14,7 +15,7 @@ func Register(c *fiber.Ctx) error {
 
   user, err := db.CreateUser(req)
   if err != nil {
-    return err
+    return err 
   }
 
 	shareLink := "http://localhost:8080/register?invite=" + user.InviteCode

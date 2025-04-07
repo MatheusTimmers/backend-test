@@ -2,7 +2,6 @@ package errors
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -37,12 +36,9 @@ func Internal(msg string) *AppError {
 }
 
 func DBError(err error) *AppError {
-	if errors.Is(err, gorm.ErrDuplicatedKey) {
-		return New("email already registered", fiber.StatusBadRequest)
-	}
-  
-  fmt.Println("\n error: " + err.Error())
-  fmt.Println("\n gorm: " + gorm.ErrDuplicatedKey.Error())
+  if errors.Is(err, gorm.ErrDuplicatedKey) {
+		return New("duplicated key not allowed", fiber.StatusBadRequest)
+  }
 
 	if errors.Is(err, gorm.ErrInvalidData) {
 		return New("invalid or missing data", fiber.StatusBadRequest)
