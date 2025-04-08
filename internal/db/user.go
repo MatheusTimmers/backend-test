@@ -68,3 +68,19 @@ func getInviter(inviteCode string) (*models.User, error) {
 
 	return &inviter, nil
 }
+
+func GetTopUsers() ([]models.User, int, error) {
+  var users []models.User
+  err := DB.Select("name", "email", "phone", "points").Order("points DESC").Limit(10).Find(&users).Error
+  if err != nil {
+    return nil, 0, err
+  }
+
+  var count int64
+  err = DB.Table("users").Count(&count).Error
+  if err != nil {
+    return nil, 0, err
+  }
+
+  return users, int(count), nil
+}
