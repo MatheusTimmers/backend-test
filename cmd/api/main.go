@@ -17,6 +17,7 @@ func main() {
   app.Use(appErr.ErrorMiddleware)
 
   app.Post("/register", handlers.Register)
+  app.Get("/ranking", handlers.Ranking)
 
 	log.Fatal(app.Listen(":8080"))
 }

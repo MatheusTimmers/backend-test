@@ -12,10 +12,3 @@ type User struct {
 	Points     int        `gorm:"default:1"`
 	CreatedAt  time.Time
 }
-
-type RegisterRequest struct {
-	Name       string `json:"name"`
-	Email      string `json:"email"`
-	Phone      string `json:"phone"`
-	InviteCode string `json:"invite_code"`
-}
