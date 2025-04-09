@@ -24,9 +24,20 @@ func Ranking(c *fiber.Ctx) error {
 			Phone:  u.Phone,
 			Points: u.Points,
 		})
-
-		mailer.SendEmail(u, mailer.Winner)
 	}
 
 	return c.JSON(models.RankingListResponse{Total: count, Ranking: ranking})
+}
+
+func NotifyWinners(c *fiber.Ctx) error {
+	users, _, err := db.GetTopUsers()
+	if err != nil {
+		return appErr.DBError(err)
+	}
+
+	for _, u := range(users) {
+		mailer.SendEmail(u, mailer.Winner)
+	}
+
+	return c.SendStatus(fiber.StatusNoContent)
 }

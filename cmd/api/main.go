@@ -1,8 +1,10 @@
 package main
 
 import (
+	"os"
 	"time"
 
+	"github.com/MatheusTimmers/backend-test/internal/config"
 	"github.com/MatheusTimmers/backend-test/internal/logger"
 
 	"github.com/MatheusTimmers/backend-test/internal/db"
@@ -15,6 +17,8 @@ import (
 func main() {
 	logger.Init()
 	defer logger.Log.Sync()
+
+	config.Load()
 
 	db.Connect()
 
@@ -34,7 +38,18 @@ func main() {
 
 	app.Post("/register", handlers.Register)
 	app.Get("/ranking", handlers.Ranking)
-	app.Get("/check-email", handlers.CheckEmail)
+
+
+	app.Post("/notify-winners",
+	func(c *fiber.Ctx) error {
+		if c.Get("Token") != os.Getenv("ADMIN_TOKEN") {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"error": "unauthorized",
+			})
+		}
+		return handlers.NotifyWinners(c)
+	},
+)
 
 	logger.Log.Info("Server started on :8080")
 	logger.Log.Error(app.Listen(":8080"))

@@ -2,37 +2,41 @@ package email
 
 import (
 	"fmt"
-	"os"
-
-	"github.com/MatheusTimmers/backend-test/internal/logger"
+	"strconv"
 
 	gomail "gopkg.in/mail.v2"
 )
 
-func Send(toName string, toEmail string, subject string, content string) error {
-	fromEmail := os.Getenv("EMAIL_API")
-	fromName := os.Getenv("NAME_API_EMAIL")
-	apiKey := os.Getenv("EMAIL_API_KEY")
+type EmailConfig struct {
+	FromEmail string
+	ApiKey    string
+	SMTPUser  string
+	SMTPHost  string
+	SMTPPort  string
+}
 
-	if fromEmail == "" || fromName == "" || apiKey == "" {
-		return fmt.Errorf("email config: missing environment variables")
+func Send(config EmailConfig, toEmail string, subject string, content string) error {
+	if config.FromEmail == "" || config.ApiKey == "" {
+		return fmt.Errorf("email config: missing mandatory parameters")
+	}
+
+	smtpHost := config.SMTPHost
+	smtpPort, err := strconv.Atoi(config.SMTPPort)
+	if (err != nil) || smtpHost == "" || smtpPort == 0 {
+		smtpHost = "live.smtp.mailtrap.io"
+		smtpPort = 587
 	}
 
 	message := gomail.NewMessage()
 
-	message.SetHeader("From", fromEmail)
+	message.SetHeader("From", config.FromEmail)
 	message.SetHeader("To", toEmail)
 	message.SetHeader("Subject", subject)
 
 	message.SetBody("text/html", content)
 
-	dialer := gomail.NewDialer("live.smtp.mailtrap.io", 587, "api", apiKey)
-	err := dialer.DialAndSend(message)
-	if err != nil {
-		logger.Log.Errorf("error sending email to %s: %v", toEmail, err)
-	} else {
-		logger.Log.Infof("email sent successfully to %s", toEmail)
-	}
+	dialer := gomail.NewDialer(smtpHost, smtpPort, config.SMTPUser, config.ApiKey)
+	err = dialer.DialAndSend(message)
 
 	return err
 }
