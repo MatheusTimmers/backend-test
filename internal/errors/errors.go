@@ -8,19 +8,19 @@ import (
 )
 
 type AppError struct {
-  Message string
-  StatusCode int
+	Message    string
+	StatusCode int
 }
 
 func (e *AppError) Error() string {
-  return e.Message
+	return e.Message
 }
 
 func New(message string, statusCode int) *AppError {
-  return &AppError{
-    Message: message,
-    StatusCode: statusCode,
-  }
+	return &AppError{
+		Message:    message,
+		StatusCode: statusCode,
+	}
 }
 
 func BadRequest(msg string) *AppError {
@@ -36,9 +36,9 @@ func Internal(msg string) *AppError {
 }
 
 func DBError(err error) *AppError {
-  if errors.Is(err, gorm.ErrDuplicatedKey) {
+	if errors.Is(err, gorm.ErrDuplicatedKey) {
 		return New("duplicated key not allowed", fiber.StatusBadRequest)
-  }
+	}
 
 	if errors.Is(err, gorm.ErrInvalidData) {
 		return New("invalid or missing data", fiber.StatusBadRequest)
