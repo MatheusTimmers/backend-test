@@ -29,7 +29,6 @@ func CreateUser(req models.RegisterRequest) (*models.User, error) {
 			return nil, appErr.Internal("failed to update inviter points")
 		}
 		invitedBy = &inviter.ID
-		mailer.SendEmail(*inviter, mailer.NewPoint)
 	}
 
 	newCode := uuid.New().String()[:8]
@@ -52,6 +51,9 @@ func CreateUser(req models.RegisterRequest) (*models.User, error) {
 		return nil, appErr.Internal("failed to commit to DB ")
 	}
 
+	if inviter != nil {
+		mailer.SendEmail(*inviter, mailer.NewPoint)
+	}
 	mailer.SendEmail(user, mailer.NewUser)
 	return &user, nil
 }
@@ -86,14 +88,4 @@ func GetTopUsers() ([]models.User, int, error) {
 	}
 
 	return users, int(count), nil
-}
-
-func EmailExist(email string) (bool, error) {
-	var count int64
-	err := DB.Model(&models.User{}).Where("email = ?", email).Count(&count).Error
-	if err != nil {
-		return false, err
-	}
-
-	return count > 0, nil
 }
