@@ -35,7 +35,11 @@ func Internal(msg string) *AppError {
 	return New(msg, fiber.ErrInternalServerError.Code)
 }
 
-func DBError(err error) *AppError {
+func DBError(err error, msg string) *AppError {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return New("invalid invite code", fiber.StatusBadRequest)
+	}
+
 	if errors.Is(err, gorm.ErrDuplicatedKey) {
 		return New("duplicated key not allowed", fiber.StatusBadRequest)
 	}
@@ -44,5 +48,5 @@ func DBError(err error) *AppError {
 		return New("invalid or missing data", fiber.StatusBadRequest)
 	}
 
-	return Internal(err.Error())
+	return Internal(msg)
 }

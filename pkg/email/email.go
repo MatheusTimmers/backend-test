@@ -2,7 +2,6 @@ package email
 
 import (
 	"fmt"
-	"strconv"
 
 	gomail "gopkg.in/mail.v2"
 )
@@ -12,7 +11,7 @@ type EmailConfig struct {
 	ApiKey    string
 	SMTPUser  string
 	SMTPHost  string
-	SMTPPort  string
+	SMTPPort  int
 }
 
 func Send(config EmailConfig, toEmail string, subject string, content string) error {
@@ -21,8 +20,8 @@ func Send(config EmailConfig, toEmail string, subject string, content string) er
 	}
 
 	smtpHost := config.SMTPHost
-	smtpPort, err := strconv.Atoi(config.SMTPPort)
-	if (err != nil) || smtpHost == "" || smtpPort == 0 {
+	smtpPort := config.SMTPPort
+	if smtpHost == "" || smtpPort == 0 {
 		smtpHost = "live.smtp.mailtrap.io"
 		smtpPort = 587
 	}
@@ -36,7 +35,7 @@ func Send(config EmailConfig, toEmail string, subject string, content string) er
 	message.SetBody("text/html", content)
 
 	dialer := gomail.NewDialer(smtpHost, smtpPort, config.SMTPUser, config.ApiKey)
-	err = dialer.DialAndSend(message)
+	err    := dialer.DialAndSend(message)
 
 	return err
 }
