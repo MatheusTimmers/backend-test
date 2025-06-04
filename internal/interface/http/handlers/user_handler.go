@@ -24,9 +24,7 @@ func (h *UserHandler) Register(c *fiber.Ctx) error {
 
 	user, err := h.service.Register(req)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+		return err
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(user)
@@ -35,9 +33,7 @@ func (h *UserHandler) Register(c *fiber.Ctx) error {
 func (h *UserHandler) Ranking(c *fiber.Ctx) error {
 	ranking, total, err := h.service.Ranking()
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -48,10 +44,7 @@ func (h *UserHandler) Ranking(c *fiber.Ctx) error {
 
 func (h *UserHandler) NotifyWinners(c *fiber.Ctx) error {
 	if err := h.service.NotifyWinners(); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+		return err
 	}
 	return c.SendStatus(fiber.StatusNoContent)
 }
-

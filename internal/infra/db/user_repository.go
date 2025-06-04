@@ -67,8 +67,6 @@ func (r *gormUserRepository) FindInviterByInviteCode(inviteCode string) (*models
 		return nil, appErr.BadRequest("invalid invite code")
 	}
 
-	inviter.Points += 1
-
 	return &inviter, nil
 }
 
