@@ -9,5 +9,5 @@ const (
 )
 
 type Mailer interface {
-	SendEmail(name, email, inviteCode string, emailType EmailType) error
+	SendEmail(name, toEmail, inviteCode string, emailType EmailType) error
 }

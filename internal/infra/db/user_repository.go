@@ -46,7 +46,7 @@ func (r *gormUserRepository) SaveInviter(inviter *models.User) error {
 
 	if err := tx.Save(&inviter).Error; err != nil {
 		tx.Rollback()
-		return appErr.DBError(err, "failed to sava user to DB",)
+		return appErr.DBError(err, "failed to save user to DB")
 	}
 
 	if err := tx.Commit().Error; err != nil {

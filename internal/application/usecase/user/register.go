@@ -15,10 +15,10 @@ func (s *userService) Register(input models.RegisterRequest) (*models.User, erro
 	}
 
 	user := models.User{
-		Name: input.Name,
-		Email: input.Email,
-		Phone: input.Phone,
-		InvitedBy: invitedBy,
+		Name:       input.Name,
+		Email:      input.Email,
+		Phone:      input.Phone,
+		InvitedBy:  invitedBy,
 		InviteCode: uuid.New().String()[:8],
 	}
 
@@ -41,7 +41,7 @@ func (s *userService) getInviter(inviteCode string) (*uint, error) {
 		if err != nil {
 			return nil, appErr.DBError(err, "failed to find inviter")
 		}
-		
+
 		inviter.Points++
 		err = s.repo.SaveInviter(inviter)
 		if err != nil {

@@ -5,6 +5,7 @@ import (
 	"html/template"
 
 	"github.com/MatheusTimmers/backend-test/internal/application/usecase"
+	"github.com/MatheusTimmers/backend-test/pkg/logger"
 )
 
 type templateData struct {
@@ -30,8 +31,9 @@ func getEmailContent(t usecase.EmailType, name, inviteCode string) (string, stri
 		return "Mensagem", "Tipo de e-mail não reconhecido."
 	}
 
-	tmpl, err := template.ParseFiles("internal/infra/mailer/templates/" + tplName)
+	tmpl, err := template.ParseFiles("internal/infra/email/templates/" + tplName)
 	if err != nil {
+		logger.Log().Error("erro to parse template", err)
 		return subject, "Erro ao carregar template."
 	}
 

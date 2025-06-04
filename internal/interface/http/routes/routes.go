@@ -8,6 +8,7 @@ import (
 	"github.com/MatheusTimmers/backend-test/internal/application/usecase/user"
 	"github.com/MatheusTimmers/backend-test/internal/interface/http/handlers"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 )
 
@@ -24,6 +25,11 @@ func RegisterRoutes(app *fiber.App, userService user.UserService) {
 				"error": "Too many requests. Please wait a bit.",
 			})
 		},
+	}))
+
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:5173",
 	}))
 
 	app.Post("/register", handler.Register)

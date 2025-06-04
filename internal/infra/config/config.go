@@ -7,13 +7,13 @@ import (
 
 type AppConfig struct {
 	Application *application
-	Database *database
-	Mailer *mailer
+	Database    *database
+	Mailer      *mailer
 }
 
 type application struct {
-	AdminToken    string
-	ServerPort    string
+	AdminToken string
+	ServerPort string
 	ServerHost string
 }
 
@@ -28,11 +28,10 @@ type database struct {
 }
 
 type mailer struct {
-	EmailFrom     string
-	EmailAPIKey   string
-	SMTPHost      string
-	SMTPPort      int
-	SMTPUser      string
+	FromEmail    string
+	FromPassword string
+	SMTPHost     string
+	SMTPPort     int
 }
 
 func Config() *AppConfig {
@@ -52,15 +51,13 @@ func Config() *AppConfig {
 			LogLevel: os.Getenv("DB_LOG_LEVEL"),
 		},
 		Mailer: &mailer{
-			EmailFrom:   os.Getenv("EMAIL_API"),
-			EmailAPIKey: os.Getenv("EMAIL_API_KEY"),
-			SMTPHost:    os.Getenv("SMTP_HOST"),
-			SMTPPort:    parseInt(os.Getenv("SMTP_PORT"), 587),
-			SMTPUser:    os.Getenv("SMTP_USER"),
+			FromEmail:    os.Getenv("FROM_EMAIL"),
+			FromPassword: os.Getenv("FROM_PASSWORD"),
+			SMTPHost:     os.Getenv("SMTP_HOST"),
+			SMTPPort:     parseInt(os.Getenv("SMTP_PORT"), 587),
 		},
 	}
 }
-
 
 func parseInt(s string, defaultVal int) int {
 	i, err := strconv.Atoi(s)
